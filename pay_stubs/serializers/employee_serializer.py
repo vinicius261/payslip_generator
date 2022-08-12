@@ -1,26 +1,24 @@
 
-from turtle import position
 from rest_framework import serializers
 from pay_stubs.models.employee import Employee
-from pay_stubs.models.position import Position
+from ..validators.employee_validator import cpf_, name_
+
 
 class EmployeeSerializer(serializers.HyperlinkedModelSerializer):
+    """Essa classe é responsável pela serialização e validação das requisições
+    relacionadas aos funcionários."""
 
     class Meta:
         model = Employee
         fields = '__all__'   
 
     def validate_name(self, name):
-        if len(name.split()) < 2:
-            raise serializers.ValidationError('Por favor, insira o nome completo.')
-        
-        return name
+        content = name_(self, name)
+        return content
 
     def validate_cpf(self, cpf):
-        if len(cpf) != 11:
-            raise serializers.ValidationError('Por favor, insira o CPF corretamente.')
-        
-        return cpf
+        content = cpf_(self, cpf)
+        return content
 
     # def validate_registration(self, registrartion):
     #     verification = Employee.objects.filter(code=registrartion).exists()
@@ -42,5 +40,5 @@ class EmployeeSerializer(serializers.HyperlinkedModelSerializer):
 
     
 
-
+ 
             

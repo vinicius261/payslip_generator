@@ -1,5 +1,4 @@
-from rest_framework import status
-from rest_framework.response import Response
+
 from rest_framework.test import APITestCase
 
 from pay_stubs.models.employee import Employee
@@ -32,25 +31,28 @@ employee3 = {
     "active_registration": "Inativo"
 }
 
+
 class EmployeeTestCase(APITestCase):
+
+    """Essa classe executa os testes unitários relacionados aos funcionários."""
 
     def test_create(self):
         response = self.client.post('/funcionarios', employee, format='json')
-        
+
         self.assertEquals(response.status_code, 201)
 
     def test_delete(self):
         post = self.client.post('/funcionarios', employee, format='json')
         response = self.client.delete('/funcionarios/000001', format='json')
-         
+
         self.assertEquals(response.status_code, 204)
 
     def test_delete_status(self):
         post = self.client.post('/funcionarios', employee, format='json')
         delete = self.client.delete('/funcionarios/000001', format='json')
         response = self.client.get('/funcionarios/000001', format='json')
-         
-        self.assertEquals(response.data['active_registration'], 'Inativo')    
+
+        self.assertEquals(response.data['active_registration'], 'Inativo')
 
     def test_list(self):
         post = self.client.post('/funcionarios', employee, format='json')
@@ -63,4 +65,3 @@ class EmployeeTestCase(APITestCase):
         response = self.client.get('/funcionarios', format='json')
 
         self.assertEquals(response.data['count'], count)
-

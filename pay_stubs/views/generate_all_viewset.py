@@ -8,12 +8,16 @@ from pay_stubs.models.pay_stubs import PayStubs
 
 import requests
 
+
 class GenerateAllViewSet(viewsets.ModelViewSet):
 
     queryset = PayStubs.objects.all()
     serializer_class = GenerateAllSerializer
 
     def create(self, request, *args, **kwargs):
+        """Essa essa sobrescrição do método persiste holerites no banco para
+        todos o funcionários ativos de uma só vez."""
+
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
@@ -25,12 +29,12 @@ class GenerateAllViewSet(viewsets.ModelViewSet):
                 "date": serializer.validated_data['date'],
                 "absences": 0,
                 "employee_id": object['url']
-                }
+            }
             requests.post("http://127.0.0.1:8000/holerites", data=data)
 
         response = requests.get("http://127.0.0.1:8000/holerites")
 
-        response = response.json()    
-            
+        response = response.json()
+
         headers = self.get_success_headers(response)
         return Response(response, status=status.HTTP_201_CREATED, headers=headers)

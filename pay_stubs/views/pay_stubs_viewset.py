@@ -1,5 +1,5 @@
 
-from  rest_framework import viewsets, status
+from rest_framework import viewsets, status
 from rest_framework.response import Response
 
 from pay_stubs.models.position import Position
@@ -9,11 +9,14 @@ from pay_stubs.models.pay_stubs import PayStubs
 from pay_stubs.serializers.pay_stubs_serializer import PayStubsSerializer
 from pay_stubs.support_code.pay_stubes_code import *
 
+
 class PayStubsViewSet(viewsets.ModelViewSet):
     queryset = PayStubs.objects.all()
-    serializer_class = PayStubsSerializer 
+    serializer_class = PayStubsSerializer
 
     def create(self, request, *args, **kwargs):
+        """Essa essa sobrescrição do método calcula e persiste holerites. """
+
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
@@ -22,20 +25,24 @@ class PayStubsViewSet(viewsets.ModelViewSet):
         absences = serializer.validated_data['absences']
 
         employee = Employee.objects.filter(registration=employee_registration)
-        employee_position =  employee[0].position_code
-        base_salary = Position.objects.filter(code=employee_position).values_list('base_salary')
-        commission_ = (Position.objects.filter(code=employee_position).values_list('commission'))   
+        employee_position = employee[0].position_code
+        base_salary = Position.objects.filter(
+            code=employee_position).values_list('base_salary')
+        commission_ = (Position.objects.filter(
+            code=employee_position).values_list('commission'))
         commission = base_salary[0][0] * commission_[0][0]
         absences_ = float(absences)
 
         fgts_base,  fgts = calcula_FGTS(base_salary[0][0], commission)
-        inss_base, inss_discount, inss_aliquot = calcula_desconto_INSS(base_salary[0][0], commission)
+        inss_base, inss_discount, inss_aliquot = calcula_desconto_INSS(
+            base_salary[0][0], commission)
         irrf_base, irrf_discount, irrf_aliquot = calcula_IRRF(
             inss_discount, base_salary[0][0], commission)
-        
+
         absentee_discount = round((base_salary[0][0]/30)*absences_, 2)
-        
-        total_discount = round(inss_discount + irrf_discount + absentee_discount, 2)
+
+        total_discount = round(
+            inss_discount + irrf_discount + absentee_discount, 2)
 
         total_salaries = base_salary[0][0] + commission
 
@@ -57,29 +64,3 @@ class PayStubsViewSet(viewsets.ModelViewSet):
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
-
-# def gerar_todos_holerites(self, cadastro: src.cadastro.Cadastroemployees):
-#         mes = input("\nPara qual mês quer gerar os holerites?")
-
-#         for employee in cadastro.__employees:
-#             self.employee = employee
-
-#             base_fgts,  fgts_mes = self.calcula_FGTS()
-#             base_inss, desconto_inss, aliquota_inss = self.calcula_desconto_INSS()
-#             base_irrf, irrf_discount, aliquota_irrf = self.calcula_IRRF(
-#                 desconto_inss)
-#             total_discount = desconto_inss + irrf_discount
-
-#             total_salaries = self.employee.salario_base + self.employee.comissao
-
-#             salario_a_receber = total_salaries - total_discount
-
-
-
-
-
-       
-
-
-    

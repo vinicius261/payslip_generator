@@ -1,9 +1,10 @@
 
-from datetime import date
+
 from django.db import models
 
 
 class Employee(models.Model):
+    """Essa classe representa os fúcionários e seus atributos."""
 
     CD = 10
     EBI = 20
@@ -32,7 +33,7 @@ class Employee(models.Model):
         "Cargo", choices=POSITION_CHOICES, null=False)
     name = models.CharField("Nome", max_length=100)
     cpf = models.CharField("CPF", max_length=11, unique=True)
-    date_admission = models.DateField("Data de admissão", null= False)
-    commission = models.BooleanField("Comissão", null= False)
+    date_admission = models.DateField("Data de admissão", null=False)
+    commission = models.BooleanField("Comissão", null=False)
     active_registration = models.CharField(
         "Status", max_length=7, choices=STATUS_CHOICES, null=False)
