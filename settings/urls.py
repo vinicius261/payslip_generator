@@ -21,12 +21,13 @@ from rest_framework import routers
 from pay_stubs.views.employee_viewset import EmployeeViewSet
 from pay_stubs.views.pay_stubs_viewset import PayStubsViewSet
 from pay_stubs.views.position_viewset import PositionViewSet
-
+from pay_stubs.views.generate_all_viewset import GenerateAllViewSet
 
 router = routers.DefaultRouter(trailing_slash=False)
 router.register(r'funcionarios', EmployeeViewSet)
 router.register(r'holerites',PayStubsViewSet)
 router.register(r'cargos',PositionViewSet)
+router.register(r'gerar_todos', GenerateAllViewSet, basename="Gerar holerite de todos funcionários")
 
 urlpatterns = [
     path('admin/', admin.site.urls),

@@ -8,7 +8,7 @@ class PayStubs(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     employee_id = models.ForeignKey(Employee,on_delete=models.CASCADE, related_name='Matrícula', verbose_name='Matrícula') 
-    date = models.DateField("Data de emissão", null= False)
+    date = models.DateField("Data de referência", null= False)
     absences = models.IntegerField("Faltas", default=0)  
     absentee_discount = models.FloatField("Desconto de faltas",null=True)
     fgts_base = models.FloatField("Base de Cáculo FGTS",null=True)

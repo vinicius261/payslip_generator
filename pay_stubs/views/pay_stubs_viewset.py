@@ -1,5 +1,3 @@
-from datetime import date
-from email.mime import base
 
 from  rest_framework import viewsets, status
 from rest_framework.response import Response
