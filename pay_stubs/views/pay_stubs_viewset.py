@@ -1,4 +1,5 @@
-
+from django_filters import rest_framework as filters
+from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 
@@ -13,6 +14,10 @@ from pay_stubs.support_code.pay_stubes_code import *
 class PayStubsViewSet(viewsets.ModelViewSet):
     queryset = PayStubs.objects.all()
     serializer_class = PayStubsSerializer
+    filter_backends = (filters.DjangoFilterBackend,
+                       OrderingFilter, SearchFilter)
+    filterset_fields = {'date': ['gte', 'lte', 'exact', 'gt', 'lt']}
+    
 
     def create(self, request, *args, **kwargs):
         """Essa essa sobrescrição do método calcula e persiste holerites. """
